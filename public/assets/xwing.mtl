@@ -1,0 +1,13 @@
+# Blender MTL File: 'xwing.blend'
+# Material Count: 1
+
+newmtl Material
+Ns 758.752060
+Ka 0.572727 0.572727 0.572727
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 10.949999
+d 1.000000
+illum 1
+map_Kd cube.png
