@@ -33,14 +33,15 @@ export default (scene) => {
         track2.position.z = -30;
         track2.rotation.x = Math.PI / 2
         track2.rotation.y = Math.PI / 2
+        var box = new THREE.Box3().setFromObject(track2);
+        // console.log(box)
+        ySize = box.max.y - box.min.y
+        y1 = -ySize
+        console.log(track2.position.y)
+        console.log(ySize)
         tracks.push(track2)
         scene.add(tracks[1]);
         console.log(scene)
-        var box = new THREE.Box3().setFromObject(tracks[0]);
-        console.log(box)
-        ySize = box.max.y - box.min.y
-        track2.position.y = -ySize
-        console.log(ySize)
 
     }, undefined, function (error) {
 
@@ -48,7 +49,7 @@ export default (scene) => {
 
     });
 
-    
+
 
     function update() {
         y1 -= 0.5
@@ -60,7 +61,7 @@ export default (scene) => {
             tracks[0].position.y = y0
             tracks[1].position.y = y1
 
-            if (tracks[0].position.y > tracks[1].position.y){
+            if (tracks[0].position.y > tracks[1].position.y) {
                 var tmp = tracks[1]
                 tracks[1] = tracks[0]
                 tracks[0] = tmp
@@ -69,18 +70,19 @@ export default (scene) => {
                 y1 = y0
                 y1 = tmp
             }
-            if (tracks[0].position.y <= -ySize)
-            {
+            if (tracks[0].position.y <= -ySize) {
                 y0 = ySize
                 y1 = 0
 
                 console.log('hi')
             }
+            // console.log(tracks[0].position.y)
+            // console.log(tracks[1].position.y)
             //     // console.log(y1)
             //     // var pos = new THREE.vector3();
             //     // console.log(pos.getPositionFromMatrix( tracks[0].matrixWorld ));
         }
-        
+
     }
 
     return { tracks, update }
