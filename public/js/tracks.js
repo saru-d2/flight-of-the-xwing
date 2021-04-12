@@ -12,8 +12,8 @@ export default (scene) => {
     loader.load('assets/track.glb', function (gltf) {
 
         var track1 = gltf.scene
-        track1.scale.setScalar(2);
-        track1.position.z = -30;
+        track1.scale.setScalar(3);
+        track1.position.z = -10;
         track1.rotation.x = Math.PI / 2
         track1.rotation.y = Math.PI / 2
         console.log(track1.position.y)
@@ -29,8 +29,8 @@ export default (scene) => {
     const loader2 = new GLTFLoader();
     loader2.load('assets/track.glb', function (gltf) {
         var track2 = gltf.scene
-        track2.scale.setScalar(2);
-        track2.position.z = -30;
+        track2.scale.setScalar(3);
+        track2.position.z = -10;
         track2.rotation.x = Math.PI / 2
         track2.rotation.y = Math.PI / 2
         var box = new THREE.Box3().setFromObject(track2);
