@@ -7,6 +7,7 @@ import Tracks from './tracks.js'
 import Bullets from './bullets.js'
 import Ties from './ties.js'
 import Stars from './stars.js'
+import tie from './tie.js';
 
 var score = 0
 var health = 5
@@ -72,11 +73,22 @@ function animate() {
   bullets.update(bullets)
   ties.update(ties)
   stars.update(stars)
+  // handleCollisions()
   requestAnimationFrame(animate)
-
   // 
   // console.log(ties)
 
+}
+
+function handleCollisions() {
+  //  ties, red bullets
+  var x11, x12, x21, x22, y11, y12, y22, y21, x1, y1
+  for (var i =0; i<ties.length(); i++){
+    x1 = ties[i].getCoords()
+    for (var j = 0; j< bullets.length(); j++) {
+      
+    }
+  }
 }
 
 

@@ -34,9 +34,9 @@ export default (scene) => {
         return ties.length;
     }
 
-    function boundingBox(i) {
-        return ties[i].boundingBox()
+    function getSize(i) {
+        return ties[i].getSize()
     }
 
-    return { ties, update, spawn, remove, length, boundingBox }
+    return { ties, update, spawn, remove, length, getSize}
 }

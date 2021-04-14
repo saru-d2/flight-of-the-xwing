@@ -31,7 +31,7 @@ function fragmentShader() {
 }
 
 export default (scene, x, y) => {
-    var bullet
+    var bullet, size
     var customMaterial = new THREE.ShaderMaterial({
         uniforms:
         {
@@ -79,6 +79,12 @@ export default (scene, x, y) => {
         }
         console.log(bullet.position.y)
         scene.add(gltf.scene);
+
+        var box = new THREE.Box3().setFromObject(bullet);
+        size = [
+            box.max.x - box.min.x,
+            box.max.y - box.min.y,
+            box.max.z - box.min.z,]
         // var pLight = new THREE.PointLight(0xff00000, 1, 100);
         // pLight.position.set(bullet.position)
         // pLight.position.z += 1
@@ -111,10 +117,9 @@ export default (scene, x, y) => {
         scene.remove(bullet)
     }
 
-    function boundingBox() {
-        var box = new THREE.Box3().setFromObject(bullet);
-        return box;
+    function getSize() {
+        return size;
     }
 
-    return { bullet, update, getPos, remove, boundingBox }
+    return { bullet, update, getPos, remove, getSize }
 }

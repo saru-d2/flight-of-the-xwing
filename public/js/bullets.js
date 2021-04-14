@@ -41,9 +41,9 @@ export default (scene) => {
         return bullets.length;
     }
 
-    function boundingBox(i) {
-        return bullets[i].boundingBox()
+    function getSize(i) {
+        return bullets[i].getSize()
     }
 
-    return { bullets, update, spawn, remove, length, boundingBox }
+    return { bullets, update, spawn, remove, length, getSize }
 }

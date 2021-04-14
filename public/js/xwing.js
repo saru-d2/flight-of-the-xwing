@@ -8,7 +8,7 @@ const MAXY = 45
 
 export default (scene) => {
 
-    var xwing;
+    var xwing, size;
     var x = 0, y = 0;
     const loader = new GLTFLoader();
     loader.load('assets/xwing.glb', function (gltf) {
@@ -18,12 +18,18 @@ export default (scene) => {
         xwing.rotation.x = Math.PI / 2
         scene.add(gltf.scene);
         console.log(scene)
+        var box = new THREE.Box3().setFromObject(xwing);
+        size = [
+            box.max.x - box.min.x,
+            box.max.y - box.min.y,
+            box.max.z - box.min.z,]
 
     }, undefined, function (error) {
 
         console.error(error);
 
     });
+
 
     function move(inpX, inpY) {
         x -= inpX * 0.6
@@ -55,11 +61,7 @@ export default (scene) => {
     }
 
     function getSize() {
-        var box = new THREE.Box3().setFromObject(xwing);
-        return [
-            box.max.x - box.min.x,
-            box.max.y - box.min.y,
-            box.max.z - box.min.z,]
+        return size;
     }
 
     return { xwing, update, move, getCoords, getSize }
