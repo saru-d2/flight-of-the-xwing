@@ -6,9 +6,12 @@ import Xwing from './xwing.js'
 import Tracks from './tracks.js'
 import Bullets from './bullets.js'
 import Ties from './ties.js'
+import Stars from './stars.js'
 
-let scene, camera, renderer, xwing, tracks, bullets, ties
-
+var score = 0
+var health = 5
+let scene, camera, renderer, xwing, tracks, bullets, ties, stars
+var tiesLoaded = false
 function init() {
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x000000);
@@ -34,8 +37,8 @@ function init() {
 
 
   camera.up.set(0, 0, 1);
-  camera.position.y = -15;
-  camera.position.z = 30;
+  camera.position.y = -10;
+  camera.position.z = 70;
 
   camera.lookAt(0, 2, 3)
   addObjs()
@@ -46,19 +49,34 @@ function addObjs() {
   tracks = Tracks(scene)
   bullets = Bullets(scene)
   ties = Ties(scene)
+  ties.spawn([15, 20])
+  ties.spawn([0, 50])
+  ties.spawn([-15, 60])
+  stars = Stars(scene)
+  stars.spawn([3, 10])
+  stars.spawn([8, 30])
+  stars.spawn([-10, 40])
 }
 
 function animate() {
 
   // cube.rotation.x += 0.01
   // xwing.rotation.x += 0.01
+  // health.setAttribute('health', String(health)); 
+  document.getElementById('health').innerHTML =  String(health);
+  document.getElementById('score').innerHTML =  String(score);
   handleInput()
   xwing.update(xwing, tracks)
   tracks.update(tracks)
   renderer.render(scene, camera)
   bullets.update(bullets)
   ties.update(ties)
+  stars.update(stars)
   requestAnimationFrame(animate)
+
+  // 
+  // console.log(ties)
+
 }
 
 
@@ -137,13 +155,14 @@ function handleInput() {
 
   if (kbdSpace)
     if (xwing) {
-      console.log(xwing.getCoords())
+      // console.log(xwing.getCoords())
       bullets.spawn(xwing.getCoords(), xwing.getSize())
       kbdSpace = false
       // ties.spawn(2, 3)
 
     }
 }
+
 
 window.addEventListener('keydown', handleKeyDown)
 window.addEventListener('keyup', handleKeyUp)

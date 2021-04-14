@@ -32,5 +32,18 @@ export default (scene) => {
         console.log(bullets.length)
     }
 
-    return { bullets, update, spawn }
+    function remove(i) {
+        bullets[i].remove()
+        bullets.splice(i, 1)
+    }
+
+    function length() {
+        return bullets.length;
+    }
+
+    function boundingBox(i) {
+        return bullets[i].boundingBox()
+    }
+
+    return { bullets, update, spawn, remove, length, boundingBox }
 }

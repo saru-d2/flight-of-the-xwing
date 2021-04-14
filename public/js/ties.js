@@ -6,16 +6,37 @@ export default (scene) => {
 
     function spawn(pos) {
         var tie = Tie(scene, pos[0], pos[1])
+        console.log(pos[0])
+        console.log(pos[1])
         ties.push(tie)
     }
 
     function update() {
-        for (var i =0; i<ties.length; i++) {
-            if (ties[i]){
+        for (var i = 0; i < ties.length; i++) {
+            if (ties[i]) {
                 ties[i].update()
             }
         }
+
+
     }
 
-    return { ties, update, spawn }
+    // function checkCols(ties) {
+    //     // console.log('yutuy')
+        
+    // }
+    function remove(i) {
+        ties[i].remove()
+        ties.splice(i, 1)
+    }
+
+    function length() {
+        return ties.length;
+    }
+
+    function boundingBox(i) {
+        return ties[i].boundingBox()
+    }
+
+    return { ties, update, spawn, remove, length, boundingBox }
 }

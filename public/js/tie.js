@@ -15,7 +15,9 @@ export default (scene, x, y) => {
         tie.rotation.z = Math.PI
         tie.rotation.x = - Math.PI / 2
         // tie.rotation.y = Math.PI / 2
-        tie.position.set(1, 0, 1)
+        console.log(x)
+        console.log(y)
+        tie.position.set(x, y, 0)
         console.log(tie.position.y)
         scene.add(gltf.scene);
         // console.log(scene)
@@ -33,10 +35,27 @@ export default (scene, x, y) => {
             tie.position.x += 0.1*dir
             if (tie.position.x > MAXX) dir = -1
             if (tie.position.x < MINX) dir = 1
+            // console.log(tie.position)
         }
+
         
     }
 
-    return { tie, update }
+    function getPos() {
+        if (tie) {
+            return [tie.position.x, tie.position.y]
+        }
+    }
+
+    function remove() {
+        scene.remove(tie)
+    }
+
+    function boundingBox() {
+        var box = new THREE.Box3().setFromObject(tie);
+        return box;
+    }
+
+    return { tie, update, getPos, remove, boundingBox }
 
 }

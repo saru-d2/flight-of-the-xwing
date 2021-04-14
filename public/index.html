@@ -11,12 +11,22 @@
             overflow: hidden;
             margin: 0px;
         }
+
+        .ui {
+            position: absolute;
+        }
     </style>
 
 </head>
 
 <body>
     <script type="module" src="/js/main.js"></script>
+    <div style="width:100%;height:50px;text-align: center; color:white;" class="ui">Game: </div>
+
+    <div style="height:10px; text-align: center; color:white;" class="ui">health:</div>
+    <div id="health" health="3" style="left:50px; height:50px;text-align: center; color:white;" class="ui"></div>
+    <div style="top:20px; height:10px; text-align: center; color:white;" class="ui">score: </div>
+    <div id="score" score="0" style="top:20px; left:50px; height:50px;text-align: center; color:white;" class="ui"></div>
 </body>
 
 </html>
