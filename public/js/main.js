@@ -7,10 +7,11 @@ import Tracks from './tracks.js'
 import Star from './star.js'
 import Tie from './tie.js';
 import Bullet from './bullet.js'
+import EnemyBullet from './enemyBullet.js'
 
 var score = 0
 var health = 5
-let scene, camera, renderer, xwing, tracks, bullets, ties, stars, side = 1
+let scene, camera, renderer, xwing, tracks, bullets, ties, stars, side = 1, enemyBullets
 var tiesLoaded = false
 function init() {
   scene = new THREE.Scene();
@@ -52,6 +53,7 @@ function addObjs() {
   ties.push(Tie(scene, 0, 50))
   ties.push(Tie(scene, -15, 60))
   bullets = []
+  enemyBullets = []
   stars = []
   stars.push(Star(scene, 3, 10))
   stars.push(Star(scene, 8, 30))
@@ -74,10 +76,86 @@ function animate() {
   for (var i = 0; i < stars.length; i++) if (stars[i]) stars[i].update()
   handleCollisions()
   handleCollisionsStars()
+  handleXwingCollision()
+  spawnEnemyBullets()
+  checkGameOver()
   requestAnimationFrame(animate)
   // 
   // console.log(ties)
 
+}
+
+function checkGameOver() {
+  if (health <= 0) {
+
+    window.location.replace("./html/lose.html");
+  }
+
+  if (ties.length == 0 && stars.length == 0) {
+    window.location.replace("./html/win.html");
+  }
+}
+
+function handleXwingCollision() {
+  if (!xwing) return
+  var x1 = -1, x2, x11 = -1, x22 = -1, y1, y2, y11 = -1, y22 = -1
+  for (var i = 0; i < enemyBullets.length; i++) {
+    if (x11 == -1) if (xwing) {
+      var r1 = xwing.getSize()
+      if (r1) {
+        x11 = r1[0]
+        y11 = r1[1]
+      }
+    }
+    if (x22 == -1) if (enemyBullets[i]) {
+      var r2 = enemyBullets[i].getSize()
+      if (r2) {
+        x22 = r2[0]
+        y22 = r2[1]
+      }
+    }
+
+    if (xwing && enemyBullets[i]) {
+      ;
+    }
+    else continue
+    if (xwing)
+      var r1 = xwing.getCoords()
+    if (stars[i])
+      var r2 = enemyBullets[i].getPos()
+    if (r1) {
+      x1 = r1[0]
+      y1 = r1[1]
+    } if (r2) {
+      x2 = r2[0]
+      y2 = r2[1]
+    }
+    if (x1 + x11 >= x2 - x22 && x1 - x11 <= x2 + x22) {
+      if (y1 >= y2 - y22 && y2 + y22 >= y1) {
+        console.log('crashxwing!!')
+        removeEnemyBullet(i)
+      }
+    }
+  }
+}
+
+var ctr = 0
+function spawnEnemyBullets() {
+  ctr += 1
+  if (ctr == 150) {
+    ctr = 0
+    for (var i = 0; i < ties.length; i++) {
+      if (ties[i]) {
+        var r1 = ties[i].getCoords()
+        if (r1) {
+          var x = r1[0]
+          var y = r1[1]
+          console.log('hey')
+          spawnEnemyBullet(x, y)
+        }
+      }
+    }
+  }
 }
 
 function handleCollisions() {
@@ -172,7 +250,7 @@ function handleCollisionsStars() {
       y2 = r2[1]
     }
     if (x1 + x11 >= x2 - x22 && x1 - x11 <= x2 + x22) {
-      if (y1 >= y2 - y22 && y2 + y22 >= y1 ) {
+      if (y1 >= y2 - y22 && y2 + y22 >= y1) {
         console.log('crashStar!!')
         handleCrashStar(i)
       }
@@ -278,6 +356,7 @@ function handleInput() {
     if (xwing) {
       spawnBullet(xwing.getCoords(), xwing.getSize())
       kbdSpace = false
+      // spawnEnemyBullet(5, 6)
     }
   // if (ties[0]) {
   //   // console.log(ties[0].getCoords())
@@ -297,9 +376,22 @@ function spawnBullet(pos, xwingSize) {
   console.log(bullets.length)
 }
 
+function spawnEnemyBullet(x, y) {
+  console.log(x, y)
+  var bullet = EnemyBullet(scene, x, y)
+  enemyBullets.push(bullet)
+  // console.log(enemyBullets.length)
+}
+
 function removeBullet(i) {
   bullets[i].remove()
   bullets.splice(i, 1)
+}
+
+function removeEnemyBullet(i) {
+  enemyBullets[i].remove()
+  enemyBullets.splice(i, 1)
+  health -= 1
 }
 
 function updateBullets() {
@@ -317,7 +409,20 @@ function updateBullets() {
         }
       }
     }
-    else { continue }
+  for (var i = 0; i < enemyBullets.length; i++)
+    if (enemyBullets[i]) {
+      enemyBullets[i].update()
+      // console.log(bullets[i].position)
+      var pos = enemyBullets[i].getPos()
+      if (pos) {
+        if (pos[1] < -100) {
+
+          console.log('remove enemy')
+          enemyBullets[i].remove()
+          enemyBullets.splice(i, 1)
+        }
+      }
+    }
 }
 
 
