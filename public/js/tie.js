@@ -60,7 +60,10 @@ export default (scene, x, y) => {
         return size
     }
 
+    function getCoords() {
+        return [tie.position.x, tie.position.y]
+    }
 
-    return { tie, update, getPos, remove, getSize }
+    return { tie, update, getPos, remove, getSize, getCoords }
 
 }

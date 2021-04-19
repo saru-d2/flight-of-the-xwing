@@ -73,7 +73,7 @@ export default (scene, x, y) => {
         bullet.rotation.y = Math.PI / 2
         bullet.position.set(x, y, 1)
 
-        console.log(bullet.material)
+        // console.log(bullet.material)
         if (bullet instanceof THREE.Mesh) {
             console.log('ye')
         }

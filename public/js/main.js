@@ -61,11 +61,8 @@ function addObjs() {
 
 function animate() {
 
-  // cube.rotation.x += 0.01
-  // xwing.rotation.x += 0.01
-  // health.setAttribute('health', String(health)); 
-  document.getElementById('health').innerHTML =  String(health);
-  document.getElementById('score').innerHTML =  String(score);
+  hud()
+
   handleInput()
   xwing.update(xwing, tracks)
   tracks.update(tracks)
@@ -73,7 +70,7 @@ function animate() {
   bullets.update(bullets)
   ties.update(ties)
   stars.update(stars)
-  // handleCollisions()
+  handleCollisions()
   requestAnimationFrame(animate)
   // 
   // console.log(ties)
@@ -82,11 +79,27 @@ function animate() {
 
 function handleCollisions() {
   //  ties, red bullets
-  var x11, x12, x21, x22, y11, y12, y22, y21, x1, y1
-  for (var i =0; i<ties.length(); i++){
-    x1 = ties[i].getCoords()
-    for (var j = 0; j< bullets.length(); j++) {
-      
+  var x11, x2, x1, x22, y11, y2, y22, y1, x1, y1
+
+  if (ties[0])
+    x11, y11 = ties[0].getSize()
+  if (bullets[0])
+    x22, y22 = bullets[0].getSize()
+  // console.log(ties.length())
+  for (var i = 0; i < ties.length(); i++) {
+    // console.log('umm')
+    if (ties[i]) {
+      console.log('heyo')
+      x1, y1, z1 = ties[i].getCoords()
+    }
+    for (var j = 0; j < bullets.length(); j++) if (bullets[i]) {
+      x2, y2, z2 = bullets[i].getCoords()
+      console.log(x1, x2, y1, y2)
+      //  intersect 
+      console.log('hey')
+      if (x1 + x11 >= x2 - x22 || x1 - x11 <= x2 - x22) {
+        console.log('x intersect')
+      }
     }
   }
 }
@@ -96,6 +109,11 @@ function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight)
+}
+
+function hud() {
+  document.getElementById('health').innerHTML = String(health);
+  document.getElementById('score').innerHTML = String(score);
 }
 
 var kbdA = false, kbdW = false, kbdS = false, kbdD = false, kbdSpace = false
@@ -120,7 +138,7 @@ function handleKeyDown(event) {
   }
   if (keyCode == 'Space') {
     kbdSpace = true
-    console.log('hi')
+    // console.log('hi')
     // scene.remove(xwing)
     // xwing.move(-1, 0)
   }
@@ -130,24 +148,19 @@ function handleKeyUp(event) {
   var keyCode = event.code;
 
   if (keyCode == 'KeyA') {
-    // xwing.move(1, 0)
     kbdA = false
   }
   if (keyCode == 'KeyW') {
     kbdW = false
-    // xwing.move(0, 1)
   }
   if (keyCode == 'KeyS') {
     kbdS = false
-    // xwing.move(0, -1)
   }
   if (keyCode == 'KeyD') {
     kbdD = false
-    // xwing.move(-1, 0)
   }
   if (keyCode == 'Space') {
     kbdSpace = false
-    // xwing.move(-1, 0)
   }
 
 }
@@ -167,11 +180,13 @@ function handleInput() {
 
   if (kbdSpace)
     if (xwing) {
-      // console.log(xwing.getCoords())
       bullets.spawn(xwing.getCoords(), xwing.getSize())
       kbdSpace = false
-      // ties.spawn(2, 3)
-
+    }
+    if (ties[0]) {
+      console.log(ties[0].getCoords())
+    }else {
+      console.log('wtf is this')
     }
 }
 

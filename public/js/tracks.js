@@ -74,7 +74,7 @@ export default (scene) => {
                 y0 = ySize
                 y1 = 0
 
-                console.log('hi')
+                // console.log('hi')
             }
             // console.log(tracks[0].position.y)
             // console.log(tracks[1].position.y)
