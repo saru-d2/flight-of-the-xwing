@@ -57,7 +57,8 @@ export default (scene) => {
     }
 
     function getCoords() {
-        return [xwing.position.x, xwing.position.y]
+        if (xwing)
+            return [xwing.position.x, xwing.position.y]
     }
 
     function getSize() {

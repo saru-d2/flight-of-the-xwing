@@ -4,14 +4,13 @@ import Stats from '/jsm/libs/stats.module.js';
 import { GLTFLoader } from '/jsm/loaders/GLTFLoader.js';
 import Xwing from './xwing.js'
 import Tracks from './tracks.js'
-import Bullets from './bullets.js'
-import Ties from './ties.js'
-import Stars from './stars.js'
-import tie from './tie.js';
+import Star from './star.js'
+import Tie from './tie.js';
+import Bullet from './bullet.js'
 
 var score = 0
 var health = 5
-let scene, camera, renderer, xwing, tracks, bullets, ties, stars
+let scene, camera, renderer, xwing, tracks, bullets, ties, stars, side = 1
 var tiesLoaded = false
 function init() {
   scene = new THREE.Scene();
@@ -48,15 +47,15 @@ function init() {
 function addObjs() {
   xwing = Xwing(scene)
   tracks = Tracks(scene)
-  bullets = Bullets(scene)
-  ties = Ties(scene)
-  ties.spawn([15, 20])
-  ties.spawn([0, 50])
-  ties.spawn([-15, 60])
-  stars = Stars(scene)
-  stars.spawn([3, 10])
-  stars.spawn([8, 30])
-  stars.spawn([-10, 40])
+  ties = []
+  ties.push(Tie(scene, 15, 20))
+  ties.push(Tie(scene, 0, 50))
+  ties.push(Tie(scene, -15, 60))
+  bullets = []
+  stars = []
+  stars.push(Star(scene, 3, 10))
+  stars.push(Star(scene, 8, 30))
+  stars.push(Star(scene, -10, 40))
 }
 
 function animate() {
@@ -67,10 +66,14 @@ function animate() {
   xwing.update(xwing, tracks)
   tracks.update(tracks)
   renderer.render(scene, camera)
-  bullets.update(bullets)
-  ties.update(ties)
-  stars.update(stars)
+  // bullets.update(bullets)
+  updateBullets()
+  // ties.update(ties)
+  for (var i = 0; i < ties.length; i++) if (ties[i]) ties[i].update()
+  // stars.update(stars)
+  for (var i = 0; i < stars.length; i++) if (stars[i]) stars[i].update()
   handleCollisions()
+  handleCollisionsStars()
   requestAnimationFrame(animate)
   // 
   // console.log(ties)
@@ -79,31 +82,124 @@ function animate() {
 
 function handleCollisions() {
   //  ties, red bullets
-  var x11, x2, x1, x22, y11, y2, y22, y1, x1, y1
+  var x11 = -1, x2, x1, x22 = -1, y11 = -1, y2, y22 = -1, y1, x1, y1, z1, z2
 
-  if (ties[0])
-    x11, y11 = ties[0].getSize()
-  if (bullets[0])
-    x22, y22 = bullets[0].getSize()
   // console.log(ties.length())
-  for (var i = 0; i < ties.length(); i++) {
+  for (var i = 0; i < ties.length; i++) {
     // console.log('umm')
     if (ties[i]) {
-      console.log('heyo')
-      x1, y1, z1 = ties[i].getCoords()
+      // console.log('heyo')
+      var ret = ties[i].getCoords()
+      if (ret) {
+        x1 = ret[0]
+        y1 = ret[1]
+      }
+      else { continue }
     }
-    for (var j = 0; j < bullets.length(); j++) if (bullets[i]) {
-      x2, y2, z2 = bullets[i].getCoords()
-      console.log(x1, x2, y1, y2)
-      //  intersect 
-      console.log('hey')
-      if (x1 + x11 >= x2 - x22 || x1 - x11 <= x2 - x22) {
-        console.log('x intersect')
+    for (var j = 0; j < bullets.length; j++) if (bullets[i]) {
+      // console.log(ties[i].getSize())
+      if (x11 == -1) {
+        var r1 = ties[i].getSize()
+        if (r1) {
+          x11 = r1[0]
+          y11 = r1[1]
+        }
+      }
+      if (x22 == -1) {
+        var r2 = bullets[i].getSize()
+        if (r2) {
+          x22 = r2[0]
+          y22 = r2[1]
+        }
+      }
+
+      var ret = bullets[i].getPos()
+
+      // console.log(ret)
+      if (ret) {
+        x2 = ret[0]
+        y2 = ret[1]
+        // console.log(x2, y2)
+      }
+      else { continue }
+      // //  intersect 
+      // console.log('hey')
+
+
+      if (x1 + x11 >= x2 - x22 && x1 - x11 <= x2 + x22) {
+        if (y1 + y11 >= y2 - y22 && y2 + y22 >= y1 + y11) {
+          console.log('crash!!')
+
+          handleCrashTies(i, j)
+        }
+      }
+      // console.log(j)
+    }
+  }
+}
+
+function handleCollisionsStars() {
+  var x1 = -1, x2, x11 = -1, x22 = -1, y1, y2, y11 = -1, y22 = -1
+  for (var i = 0; i < stars.length; i++) {
+    if (x11 == -1) if (xwing) {
+      var r1 = xwing.getSize()
+      if (r1) {
+        x11 = r1[0]
+        y11 = r1[1]
+      }
+    }
+    if (x22 == -1) if (stars[i]) {
+      var r2 = stars[i].getSize()
+      if (r2) {
+        x22 = r2[0]
+        y22 = r2[1]
+      }
+    }
+
+    if (xwing && stars[i]) {
+      ;
+    }
+    else continue
+    if (xwing)
+      var r1 = xwing.getCoords()
+    if (stars[i])
+      var r2 = stars[i].getPos()
+    if (r1) {
+      x1 = r1[0]
+      y1 = r1[1]
+    } if (r2) {
+      x2 = r2[0]
+      y2 = r2[1]
+    }
+    if (x1 + x11 >= x2 - x22 && x1 - x11 <= x2 + x22) {
+      if (y1 >= y2 - y22 && y2 + y22 >= y1 ) {
+        console.log('crashStar!!')
+        handleCrashStar(i)
       }
     }
   }
 }
 
+function handleCrashTies(i, j) {
+  removeBullet(j)
+  removeTie(i)
+  score += 50
+}
+
+function handleCrashStar(i) {
+  score += 10
+  removeStar(i)
+}
+
+function removeStar(i) {
+  stars[i].remove()
+  stars.splice(i, 1)
+}
+
+function removeTie(i) {
+  ties[i].remove()
+  ties.splice(i, 1)
+}
 
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
@@ -180,14 +276,48 @@ function handleInput() {
 
   if (kbdSpace)
     if (xwing) {
-      bullets.spawn(xwing.getCoords(), xwing.getSize())
+      spawnBullet(xwing.getCoords(), xwing.getSize())
       kbdSpace = false
     }
-    if (ties[0]) {
-      console.log(ties[0].getCoords())
-    }else {
-      console.log('wtf is this')
+  // if (ties[0]) {
+  //   // console.log(ties[0].getCoords())
+  // } else {
+  //   console.log('wtf is this')
+  // }
+}
+
+
+function spawnBullet(pos, xwingSize) {
+  var x = pos[0], y = pos[1]
+  var xSize = xwingSize[0] / 2
+  var yOff = xwingSize[1] / 3
+  var bullet = Bullet(scene, x + side * xSize, y + yOff)
+  side *= -1
+  bullets.push(bullet)
+  console.log(bullets.length)
+}
+
+function removeBullet(i) {
+  bullets[i].remove()
+  bullets.splice(i, 1)
+}
+
+function updateBullets() {
+  for (var i = 0; i < bullets.length; i++)
+    if (bullets[i]) {
+      bullets[i].update()
+      // console.log(bullets[i].position)
+      var pos = bullets[i].getPos()
+      if (pos) {
+        if (pos[1] > 100) {
+
+          console.log('remove')
+          bullets[i].remove()
+          bullets.splice(i, 1)
+        }
+      }
     }
+    else { continue }
 }
 
 

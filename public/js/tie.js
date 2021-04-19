@@ -61,7 +61,9 @@ export default (scene, x, y) => {
     }
 
     function getCoords() {
-        return [tie.position.x, tie.position.y]
+        if (tie) {
+            return [tie.position.x, tie.position.y]
+        }
     }
 
     return { tie, update, getPos, remove, getSize, getCoords }

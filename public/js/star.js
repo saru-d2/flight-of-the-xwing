@@ -3,7 +3,7 @@ import { GLTFLoader } from '/jsm/loaders/GLTFLoader.js';
 
 
 export default (scene, x, y) => {
-    var star
+    var star, size
     var loader = new GLTFLoader()
     loader.load('assets/star.glb', function (gltf) {
         star = gltf.scene
@@ -16,6 +16,12 @@ export default (scene, x, y) => {
         star.position.set(x, y, 0)
         console.log(star.position.y)
         scene.add(gltf.scene);
+        var box = new THREE.Box3().setFromObject(star);
+        size = [
+            box.max.x - box.min.x,
+            box.max.y - box.min.y,
+            box.max.z - box.min.z,]
+
         // console.log(scene)
         
     }, undefined, function (error) {
@@ -23,6 +29,10 @@ export default (scene, x, y) => {
         console.error(error);
         
     });
+
+    function remove() {
+        scene.remove(star)
+    }
     
     function update() {
         if (star) {
@@ -33,5 +43,16 @@ export default (scene, x, y) => {
             // console.log(star.rotation)
         }
     }
-    return { star, update }
+
+    function getPos() {
+        if (star)
+            return [star.position.x, star.position.y]
+    }
+
+    function getSize() {
+        if (star)
+            return size
+    }
+    
+    return { star, update, remove, getPos, getSize }
 }
