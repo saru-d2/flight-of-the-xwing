@@ -204,10 +204,10 @@ function handleCollisions() {
       // console.log('hey')
 
 
+      if (y1 + y11 >= y2 - y22 && y2 + y22 >= y1 + y11) {
+        console.log('crash!!y')
       if (x1 + x11 >= x2 - x22 && x1 - x11 <= x2 + x22) {
-        if (y1 + y11 >= y2 - y22 && y2 + y22 >= y1 + y11) {
-          console.log('crash!!')
-
+        console.log('crash!!x')
           handleCrashTies(i, j)
         }
       }

@@ -51,7 +51,7 @@ export default (scene, x, y) => {
     // var pLight;
 
 
-    loader.load('assets/enemyMissle.glb', function (gltf) {
+    loader.load('assets/enemyMissile.glb', function (gltf) {
         enemyBullet = gltf.scene
         // enemyBullet.traverse(function (child) {
 
