@@ -11,7 +11,11 @@ npm start
 
 controls: 
 <kbd>up</kbd>
+
 <kbd>down</kbd>
+
 <kbd>left</kbd>
+
 <kbd>right</kbd>
+
 <kbd>space</kbd> shoot
